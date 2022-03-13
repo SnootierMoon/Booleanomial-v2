@@ -45,7 +45,7 @@ pub fn Booleanomial(n: u16) type {
             return ret;
         }
 
-        pub fn @"not"(self: Self) Self {
+        pub fn not(self: Self) Self {
             var ret = init_false();
             ret.coeffs[0] = 1 - self.coeffs[0];
             var x: Int = 1;
@@ -74,7 +74,7 @@ pub fn Booleanomial(n: u16) type {
             return ret;
         }
 
-        pub fn @"xor"(self: Self, other: Self) Self {
+        pub fn xor(self: Self, other: Self) Self {
             var ret = self.mul(other);
             var x: Int = 0;
             while (true) : (x += 1) {
@@ -104,7 +104,7 @@ pub fn Booleanomial(n: u16) type {
                     if (c < 0) {
                         try writer.print("-", .{});
                     }
-                    if (mag != 1) {
+                    if (mag != 1 or bitset.mask == 0) {
                         try writer.print("{}", .{mag});
                     }
                     leading = false;
@@ -126,6 +126,10 @@ pub fn Booleanomial(n: u16) type {
                         try writer.print("{c}", .{fmt[x]});
                     }
                 }
+            }
+
+            if (leading) {
+                try writer.print("0", .{});
             }
         }
     };
@@ -173,13 +177,20 @@ pub fn BitCombinationIterator(n: u16) type {
 }
 
 pub fn main() void {
+    var t = Booleanomial(4).init_true();
+    var f = Booleanomial(4).init_false();
+
     var a = Booleanomial(4).init(0);
     var b = Booleanomial(4).init(1);
     var c = Booleanomial(4).init(2);
     var d = Booleanomial(4).init(3);
 
     // basic
-    var @"not a" = a.@"not"();
+    std.debug.print("a       = {abcd}\n", .{a});
+    std.debug.print("b       = {abcd}\n", .{b});
+    std.debug.print("c       = {abcd}\n", .{c});
+
+    var @"not a" = a.not();
     std.debug.print("not a   = {abcd}\n", .{@"not a"});
 
     var @"a and b" = a.@"and"(b);
@@ -188,8 +199,31 @@ pub fn main() void {
     var @"a or b" = a.@"or"(b);
     std.debug.print("a or b  = {abcd}\n", .{@"a or b"});
 
-    var @"a xor b" = a.@"xor"(b);
+    var @"a xor b" = a.xor(b);
     std.debug.print("a xor b = {abcd}\n", .{@"a xor b"});
+    std.debug.print("\n", .{});
+
+    // true and false
+    std.debug.print("true        = {abcd}\n", .{t});
+    std.debug.print("false       = {abcd}\n", .{f});
+
+    var @"not true" = t.not();
+    std.debug.print("not true    = {abcd}\n", .{@"not true"});
+    var @"not false" = f.not();
+    std.debug.print("not false   = {abcd}\n", .{@"not false"});
+
+    var @"a or true" = a.@"or"(t);
+    std.debug.print("a or true   = {abcd}\n", .{@"a or true"});
+    var @"a and true" = a.@"and"(t);
+    std.debug.print("a and true  = {abcd}\n", .{@"a and true"});
+    var @"a xor true" = a.xor(t);
+    std.debug.print("a xor true  = {abcd}\n", .{@"a xor true"});
+    var @"a or false" = a.@"or"(f);
+    std.debug.print("a or false  = {abcd}\n", .{@"a or false"});
+    var @"a and false" = a.@"and"(f);
+    std.debug.print("a and false = {abcd}\n", .{@"a and false"});
+    var @"a xor false" = a.xor(f);
+    std.debug.print("a xor false = {abcd}\n", .{@"a xor false"});
 
     std.debug.print("\n", .{});
 
@@ -203,7 +237,7 @@ pub fn main() void {
     var @"a or b or c or d" = @"a or b".@"or"(c).@"or"(d);
     std.debug.print("a or b or c or d    = {abcd}\n", .{@"a or b or c or d"});
 
-    var @"a xor b xor c xor d" = @"a xor b".@"xor"(c).@"xor"(d);
+    var @"a xor b xor c xor d" = @"a xor b".xor(c).xor(d);
     std.debug.print("a xor b xor c xor d = {abcd}\n", .{@"a xor b xor c xor d"});
 
     var @"(a and b) or (c and (a xor b))" = @"a and b".@"or"(c.@"and"(@"a xor b"));
