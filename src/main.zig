@@ -10,7 +10,7 @@ pub fn Booleanomial(n: u16) type {
 
         pub fn init_false() Self {
             return Self{
-                .coeffs = [_]i32{0} ** N,
+                .coeffs = [1]i32{0} ** N,
             };
         }
 
@@ -99,26 +99,20 @@ pub fn Booleanomial(n: u16) type {
                     continue;
                 }
 
-                if (leading) {
-                    var mag = std.math.absInt(c) catch unreachable;
-                    if (c < 0) {
+                var mag = std.math.absInt(c) catch unreachable;
+                if (c < 0) {
+                    if (leading) {
                         try writer.print("-", .{});
-                    }
-                    if (mag != 1 or bitset.mask == 0) {
-                        try writer.print("{}", .{mag});
-                    }
-                    leading = false;
-                } else {
-                    var mag = std.math.absInt(c) catch unreachable;
-                    if (c < 0) {
-                        try writer.print(" - ", .{});
                     } else {
-                        try writer.print(" + ", .{});
+                        try writer.print(" - ", .{});
                     }
-                    if (mag != 1 or bitset.mask == 0) {
-                        try writer.print("{}", .{mag});
-                    }
+                } else if (!leading) {
+                    try writer.print(" + ", .{});
                 }
+                if (mag != 1 or bitset.mask == 0) {
+                    try writer.print("{}", .{mag});
+                }
+                leading = false;
 
                 var x: usize = 0;
                 while (x < n) : (x += 1) {
