@@ -34,10 +34,24 @@ asked
 ## Output
 
 ```
+a       = a
+b       = b
+c       = c
 not a   = -a + 1
 a and b = ab
 a or b  = -ab + a + b
 a xor b = -2ab + a + b
+
+true        = 1
+false       = 0
+not true    = 0
+not false   = 1
+a or true   = 1
+a and true  = a
+a xor true  = -a + 1
+a or false  = a
+a and false = 0
+a xor false = a
 
 c and (a or b)      = -abc + ac + bc
 a and b and c and d = abcd
