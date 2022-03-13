@@ -45,3 +45,7 @@ a or b or c or d    = -abcd + abc + abd + acd + bcd - ab - ac - bc - ad - bd - c
 a xor b xor c xor d = -8abcd + 4abc + 4abd + 4acd + 4bcd - 2ab - 2ac - 2bc - 2ad - 2bd - 2cd + a + b + c + d
 (a and b) or (c and (a xor b)) = -2abc + ab + ac + bc
 ```
+
+## TODO
+
+comptime compilre
